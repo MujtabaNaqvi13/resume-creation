@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume & Cover Letter Builder</title>
+  <meta name="description" content="A polished resume and cover letter builder that generates downloadable documents and email delivery without PHP." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <h1>Resume & Cover Letter Builder</h1>
+      <p>Capture user details, generate polished documents, and deliver them by download or email.</p>
+      <div class="hero-pill">Create resumes for users with a modern document-style output.</div>
+    </header>
+
+    <main>
+      <form id="wizardForm" class="wizard-form" novalidate>
+        <section class="step" data-step="1">
+          <h2>Step 1: Personal Details & Target Role</h2>
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="e.g. Jordan Lee" required />
+
+          <label for="phoneNumber">Phone number</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" placeholder="e.g. (555) 123-4567" required />
+
+          <label for="emailAddress">Email address</label>
+          <input type="email" id="emailAddress" name="emailAddress" placeholder="e.g. jordan@email.com" required />
+
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" min="1" max="100" placeholder="e.g. 19" required />
+
+          <label for="targetRole">Job title your user is targeting</label>
+          <input type="text" id="targetRole" name="targetRole" placeholder="e.g. Product Marketing Manager" required />
+
+          <label for="targetCompany">Target company</label>
+          <input type="text" id="targetCompany" name="targetCompany" placeholder="e.g. Acme Corp" required />
+
+          <label for="jobDescription">Optional job description / posting</label>
+          <textarea id="jobDescription" name="jobDescription" rows="4" placeholder="Paste the job description here"></textarea>
+        </section>
+
+        <section class="step hidden" data-step="2">
+          <h2 id="experienceHeading">Step 2: Professional Work History</h2>
+          <p id="experienceIntro">Add the roles that best support this application.</p>
+          <label id="neverWorkedWrapper" class="radio-label hidden">
+            <input type="checkbox" id="neverWorked" />
+            I am under 18 and have never worked before
+          </label>
+          <div id="workHistoryContainer"></div>
+          <button type="button" id="addJob">Add another entry</button>
+        </section>
+
+        <section class="step hidden" data-step="3">
+          <h2>Step 3: Core Skills</h2>
+          <label for="skills">Top skills and tools (comma separated)</label>
+          <input type="text" id="skills" name="skills" placeholder="e.g. SQL, Figma, stakeholder management" required />
+        </section>
+
+        <section class="step hidden" data-step="4">
+          <h2 id="educationHeading">Step 4: Education & Credentials</h2>
+          <div id="educationOlder">
+            <label for="degree">Highest degree</label>
+            <input type="text" id="degree" name="degree" placeholder="e.g. MBA, B.Sc. in Computer Science" />
+
+            <label for="school">College / University</label>
+            <input type="text" id="school" name="school" placeholder="e.g. University of Washington" />
+
+            <label for="graduationYear">Graduation year</label>
+            <input type="text" id="graduationYear" name="graduationYear" placeholder="e.g. 2023" />
+
+            <label for="certifications">Certifications (optional, comma separated)</label>
+            <input type="text" id="certifications" name="certifications" placeholder="e.g. PMP, Google Analytics" />
+          </div>
+
+          <div id="educationYounger">
+            <label for="schoolName">School name</label>
+            <input type="text" id="schoolName" name="schoolName" placeholder="e.g. Lincoln High School" />
+
+            <label for="currentGrade">Current grade</label>
+            <input type="text" id="currentGrade" name="currentGrade" placeholder="e.g. 10th Grade" />
+
+            <label for="favoriteSubjects">Favorite subjects (comma separated)</label>
+            <input type="text" id="favoriteSubjects" name="favoriteSubjects" placeholder="e.g. Math, Biology, Art" />
+          </div>
+        </section>
+
+        <section class="step hidden" data-step="5">
+          <h2>Step 5: Format & Tone</h2>
+          <label class="radio-label">
+            <input type="radio" name="style" value="strict" required />
+            Strict Corporate
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="style" value="modern" />
+            Modern / Minimalist
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="style" value="bold" />
+            Bold / Creative
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="style" value="executive" />
+            Executive / Premium
+          </label>
+        </section>
+
+        <div class="controls">
+          <button type="button" id="prevBtn" class="secondary">Previous</button>
+          <button type="button" id="nextBtn">Next</button>
+          <button type="submit" id="generateBtn" class="primary hidden">Generate</button>
+        </div>
+        <p id="formFeedback" class="form-feedback" role="alert" aria-live="polite"></p>
+      </form>
+
+      <section class="output hidden" id="outputSection" aria-labelledby="outputHeading">
+        <div class="output-header">
+          <div>
+            <h2 id="outputHeading">Generated Document</h2>
+            <p>Review the resume and cover letter below, then download or send it to your email.</p>
+          </div>
+          <div class="output-actions">
+            <button type="button" id="downloadPdfBtn" class="primary">Download PDF</button>
+            <button type="button" id="downloadTxtBtn" class="secondary">Download TXT</button>
+            <button type="button" id="copyOutput" class="secondary">Copy</button>
+          </div>
+        </div>
+        <pre id="outputPreview" aria-live="polite" role="region"></pre>
+        <div class="email-panel">
+          <label class="sr-only" for="emailToSend">Email address for delivery</label>
+          <input type="email" id="emailToSend" name="emailToSend" placeholder="Enter your email" />
+          <button type="button" id="sendEmailBtn" class="primary">Email to me</button>
+          <span id="emailMessage" class="email-message" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    window.EMAILJS_CONFIG = {
+      publicKey: 'YOUR_PUBLIC_KEY',
+      serviceId: 'YOUR_SERVICE_ID',
+      templateId: 'YOUR_TEMPLATE_ID'
+    };
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
