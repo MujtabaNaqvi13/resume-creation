@@ -143,10 +143,15 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
+    // Configure your EmailJS credentials here
+    // Get these from: https://www.emailjs.com/
+    // 1. Public Key: Account → API Keys
+    // 2. Service ID: Email Services (e.g., "service_xxxxx")
+    // 3. Template ID: Email Templates (e.g., "template_xxxxx")
     window.EMAILJS_CONFIG = {
-      publicKey: 'YOUR_PUBLIC_KEY',
-      serviceId: 'YOUR_SERVICE_ID',
-      templateId: 'YOUR_TEMPLATE_ID'
+      publicKey: 'YOUR_EMAILJS_PUBLIC_KEY_HERE',
+      serviceId: 'YOUR_SERVICE_ID_HERE',
+      templateId: 'YOUR_TEMPLATE_ID_HERE'
     };
   </script>
   <script src="app.js"></script>
