@@ -20,8 +20,36 @@ const DEFAULT_STATE = {
     favoriteSubjects: []
   },
   style: 'strict',
-  neverWorked: false
+  neverWorked: false,
+  layout: 'single-page',
+  typography: 'sans-serif-modern',
+  preset: ''
 };
+
+// Theme initialization
+const themeToggle = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('resume-theme') || 'light';
+  htmlElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function updateThemeIcon(theme) {
+  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  htmlElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('resume-theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+themeToggle.addEventListener('click', toggleTheme);
+initTheme();
 
 const steps = Array.from(document.querySelectorAll('.step'));
 const workHistoryContainer = document.getElementById('workHistoryContainer');
@@ -211,6 +239,46 @@ function syncStateFromDom() {
   if (selectedStyle) {
     state.style = selectedStyle.value;
   }
+
+  // Handle resume format selections
+  const selectedLayout = document.querySelector('input[name="layout"]:checked');
+  if (selectedLayout) {
+    state.layout = selectedLayout.value;
+  }
+
+  const selectedTypography = document.querySelector('input[name="typography"]:checked');
+  if (selectedTypography) {
+    state.typography = selectedTypography.value;
+  }
+
+  const selectedPreset = document.querySelector('input[name="preset"]:checked');
+  if (selectedPreset) {
+    state.preset = selectedPreset.value;
+    // Apply preset overrides
+    applyPresetFormat(selectedPreset.value);
+  }
+}
+
+function applyPresetFormat(preset) {
+  const presets = {
+    'ats-friendly': { layout: 'single-page', typography: 'sans-serif-professional' },
+    'modern-creative': { layout: 'sidebar', typography: 'sans-serif-modern' },
+    'corporate-executive': { layout: 'two-page', typography: 'serif-traditional' }
+  };
+
+  if (presets[preset]) {
+    const { layout, typography } = presets[preset];
+    state.layout = layout;
+    state.typography = typography;
+    
+    // Update UI to reflect preset
+    document.querySelectorAll('input[name="layout"]').forEach((radio) => {
+      radio.checked = radio.value === layout;
+    });
+    document.querySelectorAll('input[name="typography"]').forEach((radio) => {
+      radio.checked = radio.value === typography;
+    });
+  }
 }
 
 function populateFormFromState() {
@@ -233,6 +301,20 @@ function populateFormFromState() {
   document.querySelectorAll('input[name="style"]').forEach((radio) => {
     radio.checked = radio.value === state.style;
   });
+
+  document.querySelectorAll('input[name="layout"]').forEach((radio) => {
+    radio.checked = radio.value === state.layout;
+  });
+
+  document.querySelectorAll('input[name="typography"]').forEach((radio) => {
+    radio.checked = radio.value === state.typography;
+  });
+
+  if (state.preset) {
+    document.querySelectorAll('input[name="preset"]').forEach((radio) => {
+      radio.checked = radio.value === state.preset;
+    });
+  }
 
   document.getElementById('neverWorked').checked = Boolean(state.neverWorked);
 
@@ -411,10 +493,19 @@ function downloadPdfFile() {
 function initializeEmailService() {
   const config = window.EMAILJS_CONFIG || {};
   if (window.emailjs && typeof window.emailjs.init === 'function') {
-    if (config.publicKey && !config.publicKey.includes('YOUR_')) {
+    if (config.publicKey && !config.publicKey.includes('YOUR_') && config.publicKey.trim() !== '') {
       window.emailjs.init(config.publicKey);
     }
   }
+}
+
+function isEmailJSConfigured() {
+  const config = window.EMAILJS_CONFIG || {};
+  const hasPublicKey = config.publicKey && !config.publicKey.includes('YOUR_') && config.publicKey.trim() !== '';
+  const hasServiceId = config.serviceId && !config.serviceId.includes('YOUR_') && config.serviceId.trim() !== '';
+  const hasTemplateId = config.templateId && !config.templateId.includes('YOUR_') && config.templateId.trim() !== '';
+  
+  return hasPublicKey && hasServiceId && hasTemplateId && window.emailjs && typeof window.emailjs.send === 'function';
 }
 
 async function sendDocumentByEmail() {
@@ -435,9 +526,8 @@ async function sendDocumentByEmail() {
     return;
   }
 
-  const config = window.EMAILJS_CONFIG || {};
-  if (!window.emailjs || typeof window.emailjs.send !== 'function' || !config.serviceId || config.serviceId.includes('YOUR_') || !config.templateId || config.templateId.includes('YOUR_')) {
-    setEmailFeedback('EmailJS is not configured yet. Add your public key, service ID, and template ID to the page.', true);
+  if (!isEmailJSConfigured()) {
+    setEmailFeedback('⚠️ EmailJS is not configured. Visit index.html and add your EmailJS credentials (Public Key, Service ID, and Template ID) to enable email delivery.', true);
     return;
   }
 
@@ -447,6 +537,7 @@ async function sendDocumentByEmail() {
   setEmailFeedback('Sending your document...');
 
   try {
+    const config = window.EMAILJS_CONFIG;
     await window.emailjs.send(config.serviceId, config.templateId, {
       to_email: recipient,
       from_name: 'Resume Builder',

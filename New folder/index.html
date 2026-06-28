@@ -1,21 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resume & Cover Letter Builder</title>
+  <title>ResumeCraft - Resume & Cover Letter Builder</title>
   <meta name="description" content="A polished resume and cover letter builder that generates downloadable documents and email delivery without PHP." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <span class="brand-icon">📄</span>
+          <h1 class="brand-name">ResumeCraft</h1>
+        </div>
+        <div class="navbar-controls">
+          <button id="themeToggle" class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+            🌙
+          </button>
+        </div>
+      </div>
+    </nav>
+
     <header>
-      <h1>Resume & Cover Letter Builder</h1>
-      <p>Capture user details, generate polished documents, and deliver them by download or email.</p>
-      <div class="hero-pill">Create resumes for users with a modern document-style output.</div>
+      <h2>Resume & Cover Letter Builder</h2>
+      <p>Capture your details, generate polished documents, and deliver them by download or email.</p>
+      <div class="hero-pill">Create professional resumes with modern layouts and multiple format options.</div>
     </header>
 
     <main>
@@ -90,7 +104,75 @@
         </section>
 
         <section class="step hidden" data-step="5">
-          <h2>Step 5: Format & Tone</h2>
+          <h2>Step 5: Resume Layout & Typography</h2>
+          <div class="format-group">
+            <h3>Select Layout Style</h3>
+            <label class="radio-label">
+              <input type="radio" name="layout" value="single-page" required />
+              <strong>Single-Page Resume</strong> - Classic, all content on one page
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="layout" value="two-page" />
+              <strong>Two-Page Resume</strong> - Extended format for detailed experience
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="layout" value="column-based" />
+              <strong>Column-Based Layout</strong> - Multi-column design for better space usage
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="layout" value="sidebar" />
+              <strong>Sidebar Layout</strong> - Skills and info on the side, experience in main column
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="layout" value="modular" />
+              <strong>Modular (Block) Layout</strong> - Clean section blocks with visual separation
+            </label>
+          </div>
+
+          <div class="format-group">
+            <h3>Select Typography Style</h3>
+            <label class="radio-label">
+              <input type="radio" name="typography" value="sans-serif-modern" required />
+              <strong>Modern Sans-Serif</strong> - Clean, contemporary look (Roboto/Helvetica)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="typography" value="sans-serif-professional" />
+              <strong>Professional Sans-Serif</strong> - Balanced, corporate standard (Arial/Calibri)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="typography" value="serif-traditional" />
+              <strong>Serif Traditional</strong> - Formal, classic look (Georgia/Times New Roman)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="typography" value="monospace-tech" />
+              <strong>Monospace Tech</strong> - Great for tech roles (Courier/Consolas)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="typography" value="minimal" />
+              <strong>Minimal Typography</strong> - Light spacing, simple clean fonts
+            </label>
+          </div>
+
+          <div class="format-group">
+            <h3>Quick Format Presets</h3>
+            <p class="format-hint">Or choose a pre-built combination:</p>
+            <label class="radio-label">
+              <input type="radio" name="preset" value="ats-friendly" />
+              <strong>ATS-Friendly</strong> - Optimized for Applicant Tracking Systems (Single-Page + Professional Sans-Serif)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="preset" value="modern-creative" />
+              <strong>Modern Creative</strong> - Contemporary design for creative roles (Sidebar + Modern Sans-Serif)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="preset" value="corporate-executive" />
+              <strong>Corporate Executive</strong> - Professional for leadership roles (Two-Page + Serif)
+            </label>
+          </div>
+        </section>
+
+        <section class="step hidden" data-step="6">
+          <h2>Step 6: Format & Tone</h2>
           <label class="radio-label">
             <input type="radio" name="style" value="strict" required />
             Strict Corporate
