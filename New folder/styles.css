@@ -264,6 +264,7 @@ button {
   min-width: 110px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 button:hover {
@@ -281,15 +282,35 @@ button.primary {
   box-shadow: 0 18px 40px rgba(59, 130, 246, 0.18);
 }
 
+button.primary:hover:not(:disabled) {
+  box-shadow: 0 24px 50px rgba(59, 130, 246, 0.28);
+}
+
 button.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: var(--border-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+html[data-theme="dark"] button.secondary {
+  background: #334155;
+  border-color: #475569;
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  border-color: var(--accent-color);
 }
 
 button#addJob {
-  background: #f8fafc;
-  color: #0f172a;
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+button#addJob:hover:not(:disabled) {
+  background: var(--bg-primary);
+  border-color: var(--accent-color);
 }
 
 .hidden {
@@ -299,17 +320,26 @@ button#addJob {
 .form-feedback {
   margin: 0;
   min-height: 1.2rem;
-  color: #b91c1c;
+  color: #dc2626;
   font-size: 0.95rem;
+}
+
+html[data-theme="dark"] .form-feedback {
+  color: #fca5a5;
 }
 
 .output {
   margin-top: 24px;
   padding: 26px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), #f8fafc);
+  background: var(--bg-primary);
   border-radius: 28px;
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  border: 1px solid var(--border-color);
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html[data-theme="dark"] .output {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .output-header {
@@ -323,11 +353,12 @@ button#addJob {
 .output-header h2 {
   margin: 0;
   font-size: 1.38rem;
+  color: var(--text-primary);
 }
 
 .output-header p {
   margin: 6px 0 0;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .output-actions {
@@ -338,12 +369,13 @@ button#addJob {
 
 #outputPreview {
   width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   padding: 26px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   min-height: 420px;
-  background: #f8fafc;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-word;
   overflow-x: hidden;
@@ -362,7 +394,17 @@ button#addJob {
   flex: 1;
   border-radius: 999px;
   padding: 14px 18px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  min-width: 200px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.email-panel input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
 }
 
 .email-panel button {
@@ -372,35 +414,56 @@ button#addJob {
 .email-message {
   display: block;
   width: 100%;
-  color: #0f172a;
+  color: var(--text-primary);
   font-size: 0.95rem;
   margin-top: 8px;
 }
 
 .email-message.error {
-  color: #b91c1c;
+  color: #dc2626;
+}
+
+html[data-theme="dark"] .email-message.error {
+  color: #fca5a5;
 }
 
 .work-entry {
   margin-bottom: 24px;
   padding: 22px;
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  border: 1px solid var(--border-color);
   border-radius: 22px;
-  background: #ffffff;
+  background: var(--bg-primary);
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.04);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html[data-theme="dark"] .work-entry {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
 }
 
 .work-entry h3 {
   margin-top: 0;
   margin-bottom: 14px;
   font-size: 1.05rem;
+  color: var(--text-primary);
 }
 
 .remove-job {
   margin-top: 14px;
-  background: #f8d7da;
-  color: #b91c1c;
+  background: #fee2e2;
+  color: #dc2626;
   padding: 12px 18px;
+  font-weight: 600;
+}
+
+html[data-theme="dark"] .remove-job {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.remove-job:hover:not(:disabled) {
+  background: #fca5a5;
+  color: #7f1d1d;
 }
 
 .sr-only {
@@ -418,6 +481,10 @@ button#addJob {
 @media (max-width: 760px) {
   .app-shell {
     padding: 22px 16px 32px;
+  }
+
+  .navbar-container {
+    padding: 12px 16px;
   }
 
   .wizard-form,
